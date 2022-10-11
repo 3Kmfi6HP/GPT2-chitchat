@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  chatbot_api:
+    container_name: chatbot_api
+    restart: always
+    env_file: .env
+    build: .
+    networks:
+      - api_network
+      - web_network
+  nginx:
+    container_name: nginx
+    restart: always
+    image: "nginx:latest"
+    ports:
+      - "7500:5000"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - web_network
+    depends_on: 
+      - chatbot_api
+networks:
+  api_network:
+    driver: bridge
+  web_network:
+    driver: bridge
